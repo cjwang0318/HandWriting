@@ -139,14 +139,15 @@ def read_from_dgrl(dgrl):
             cv.imwrite(bitmap_file, bitmap)
 
 if __name__ == '__main__':
-    gne_path = './CASIA/gnt/Gnt1.0Train'  # 目錄下均為gnt檔案
-    save_dir = './output'
-    gne_path = r'D:\temp\Gnt1.2Test'  # 目錄下均為gnt檔案
-    save_dir = r'D:\temp\output'
-    gnt_convert(gne_path, save_dir)
+    # gne_path = './CASIA/gnt/Gnt1.0Train'  # 目錄下均為gnt檔案
+    # save_dir = './output'
+    # gne_path = r'D:\temp\Gnt1.2Test'  # 目錄下均為gnt檔案
+    # save_dir = r'D:\temp\output'
+    # gnt_convert(gne_path, save_dir)
 
-    # dgrl_path='./CASIA/dgrl'
-    # dgrl_paths = Path(dgrl_path).iterdir()
-    # dgrl_paths = list(dgrl_paths)
-    # for dgrl_path in tqdm(dgrl_paths):
-    #     read_from_dgrl(dgrl_path)
+    #dgrl_path='./CASIA/dgrl'
+    dgrl_path = r'D:\temp\HWDB2.0Test'
+    dgrl_paths = Path(dgrl_path).iterdir()
+    dgrl_paths = list(dgrl_paths)
+    for dgrl_path in tqdm(dgrl_paths):
+        read_from_dgrl(dgrl_path)
