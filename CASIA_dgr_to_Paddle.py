@@ -52,6 +52,7 @@ def read_from_dgrl(dgrl, train_txt):
         line_num = sum([j << (i * 8) for i, j in enumerate(image_record[8:])])
         print('圖像尺寸:')
         print(height, width, line_num)
+        height=int(height*1.2)
         img_ori = np.zeros((height, width), np.uint8)
         img_ori.fill(255)
 
@@ -120,11 +121,14 @@ def read_from_dgrl(dgrl, train_txt):
 
 
 if __name__ == '__main__':
-    dgrl_path = r'D:\temp\HWDB2.0Test'
+    dgrl_path = r'D:\temp\HWDB2.2Train'
+    dgrl_path = r'D:\temp\HWDB2.2Test'
+    #dgrl_path = r'D:\temp\error_file'
     dgrl_paths = Path(dgrl_path).iterdir()
     dgrl_paths = list(dgrl_paths)
     '''for save txt'''
     train_txt = open('test_label.txt', 'w', encoding='UTF-8')
     for dgrl_path in tqdm(dgrl_paths):
+        print(dgrl_path)
         read_from_dgrl(dgrl_path, train_txt)
     train_txt.close()
