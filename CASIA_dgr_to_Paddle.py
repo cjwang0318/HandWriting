@@ -6,7 +6,7 @@ from PIL import Image
 import cv2 as cv
 import numpy as np
 from tqdm import tqdm
-
+import json
 
 def write_txt(save_path: str, content: list, mode='w'):
     """
@@ -51,8 +51,8 @@ def read_from_dgrl(dgrl, train_txt):
         width = sum([j << (i * 8) for i, j in enumerate(image_record[4:8])])
         line_num = sum([j << (i * 8) for i, j in enumerate(image_record[8:])])
         print('圖像尺寸:')
+        height = int(height * 1.5)
         print(height, width, line_num)
-        height=int(height*1.2)
         img_ori = np.zeros((height, width), np.uint8)
         img_ori.fill(255)
 
@@ -99,10 +99,11 @@ def read_from_dgrl(dgrl, train_txt):
             # bitmap_all = np.fromfile(f, dtype='uint8', count=height*2482)
 
             # 保存資訊
+            point_save = mat([[x, y], [x + w, y], [x + w, y + h], [x, y + h]])
             '''for save txt'''
             txt_json = {
                 "transcription": label,
-                "points": [[x, y], [x + w, y], [x + w, y + h], [x, y + h]],
+                "points": point_save.tolist()
             }
             append_txt.append(txt_json)
             label_file = os.path.join(
@@ -117,7 +118,7 @@ def read_from_dgrl(dgrl, train_txt):
         bitmap_file_ori = os.path.join(
             image_dir, base_name.replace('.dgrl', '.jpg'))
         cv.imwrite(bitmap_file_ori, img_ori)
-        train_txt.write(bitmap_file_ori.replace(image_dir+"\\", "") + "\t" + str(append_txt) + '\n')
+        train_txt.write(bitmap_file_ori + "\t" + json.dumps(append_txt, ensure_ascii=False) + '\n')
 
 
 if __name__ == '__main__':
