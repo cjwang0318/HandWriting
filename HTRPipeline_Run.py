@@ -4,6 +4,12 @@ import numpy as np
 from htr_pipeline import read_page, DetectorConfig, LineClusteringConfig
 
 
+def area_value(img):
+    height, width = img.shape[:2]  # image height and width
+    areaValue = height * width
+    return areaValue
+
+
 def run(filepath, off_set):
     basename = os.path.basename(filepath)  # example.py
     filename = os.path.splitext(basename)[0]  # example
@@ -38,15 +44,20 @@ def run(filepath, off_set):
     # print(read_lines)
     # font = cv2.FONT_HERSHEY_SIMPLEX
     j = 0
+    maxArea = 0
     for i, read_line in enumerate(read_lines):
         print("Number of BBX=" + str(len(read_line)))
         for read_word in read_line:
             aabb = read_word.aabb
             cv2.rectangle(img2, (aabb.xmin, aabb.ymin), (aabb.xmax, aabb.ymax), (0, 255, 0), 4)
             img4 = img3[aabb.ymin:aabb.ymax, aabb.xmin:aabb.xmax]
-            text = read_word.text
-            cv2.imwrite(f'./img/crop_img/{filename}_{j}_{text}.jpg', img4)
-            j += 1
+            # text = read_word.text
+            area = area_value(img4)
+            if area > maxArea:
+                maxImg = img4
+            #j += 1
+    #cv2.imwrite(f'./img/crop_img/{filename}_{j}_{text}.jpg', img4)
+    cv2.imwrite(f'./img/crop_img/{filename}_bigArea.jpg', img4)
             # line_detection(img4)
             # print(f"BBX_{j} Texe={text}")
         # cv2.putText(img2, text, (aabb.xmax, aabb.ymin), font, 1, (255, 0, 0), 1)
