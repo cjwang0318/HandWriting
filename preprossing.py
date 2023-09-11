@@ -2,8 +2,7 @@ import cv2
 import glob
 import os
 
-inputpath = 'D:\\temp\\test\\CASIA_Filtered'
-outputpath = 'D:\\temp\\test2\\CASIA_Filtered'
+
 
 
 # defining a function for the task
@@ -43,7 +42,7 @@ def img_write_path(str, str1, str2):
     return new_str
 
 
-def img_binarization(path):
+def img_binarization(path, input_fold_name, output_fold_name):
     for i in path:
         #print(i.split('/')[-1])
         img = cv2.imread(i)
@@ -52,12 +51,30 @@ def img_binarization(path):
         blur = cv2.GaussianBlur(gry, (3, 3), 0)
         th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
         # 注意路徑
-        binary_write_path=img_write_path(i, "test", "test2")
+        binary_write_path=img_write_path(i, input_fold_name, output_fold_name)
         #print(binary_write_path)
         cv2.imwrite(binary_write_path, th)
 
+def convert_png2jpg(path, input_fold_name, output_fold_name):
+    for i in path:
+        #print(i.split('/')[-1])
+        png_img = cv2.imread(i, cv2.IMREAD_UNCHANGED)
+        b, g, r, a = cv2.split(png_img)
+        new_img = cv2.merge((b, g, r))
+        not_a = cv2.bitwise_not(a)
+        not_a = cv2.cvtColor(not_a, cv2.COLOR_GRAY2BGR)
+        new_img = cv2.bitwise_and(new_img, new_img, mask=a)
+        new_img = cv2.add(new_img, not_a)
+        binary_write_path = img_write_path(i, input_fold_name, output_fold_name)
+        jpg_file_path = binary_write_path[:-3] + "jpg";
+        cv2.imwrite(jpg_file_path, new_img)
+
 
 if __name__ == '__main__':
+    inputpath = 'D:/temp/dataset/'
+    outputpath = 'D:/temp/dataset2/'
+    input_fold_name="dataset"
+    output_fold_name = "dataset2"
     # calling the above function
     input_dirpath_list = create_dirtree_without_files(inputpath, outputpath)
     for dir_path in input_dirpath_list:
@@ -67,4 +84,5 @@ if __name__ == '__main__':
         if len(file_path_list) == 0:
             continue
         # print(file_path_list)
-        img_binarization(file_path_list)
+        convert_png2jpg(file_path_list, input_fold_name, output_fold_name)
+        #img_binarization(file_path_list, input_fold_name, output_fold_name)
