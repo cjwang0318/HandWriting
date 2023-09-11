@@ -55,13 +55,13 @@ def run(filepath, off_set):
             area = area_value(img4)
             if area > maxArea:
                 maxImg = img4
+                maxArea = area
             #j += 1
     #cv2.imwrite(f'./img/crop_img/{filename}_{j}_{text}.jpg', img4)
-    cv2.imwrite(f'./img/crop_img/{filename}_bigArea.jpg', img4)
+    cv2.imwrite(f'./img/crop_img/{filename}_bigArea.jpg', maxImg)
             # line_detection(img4)
             # print(f"BBX_{j} Texe={text}")
         # cv2.putText(img2, text, (aabb.xmax, aabb.ymin), font, 1, (255, 0, 0), 1)
-
     cv2.imwrite('./BBX_result.jpg', img2)
 
 
